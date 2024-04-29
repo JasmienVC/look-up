@@ -33,6 +33,7 @@ class Man {
     img.addEventListener("load", () => {
       this.img = img;
       this.draw();
+      updateCanvas();
     });
   }
 
@@ -48,8 +49,24 @@ class Man {
   }
 }
 
+class Poop {
+  constructor() {
+    this.x = 20;
+    this.y = 20;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
+    ctx.fillStyle = "#622711";
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
 const meadow = new Meadow();
 const man = new Man();
+const poop = new Poop();
 
 document.addEventListener("keydown", e => {
   switch (e.keyCode) {
@@ -67,4 +84,5 @@ function updateCanvas() {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   meadow.draw();
   man.draw();
+  poop.draw();
 }
