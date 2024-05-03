@@ -14,6 +14,7 @@ class Meadow {
     img.addEventListener("load", () => {
       this.img = img;
       this.draw();
+      updateCanvas();
     });
   }
 
@@ -51,8 +52,10 @@ class Man {
 
 class Poop {
   constructor() {
-    this.x = 20;
-    this.y = 20;
+    this.x = Math.random() * window.innerWidth;
+    this.y = 0;
+    this.vy = 4;
+    this.gravity = 1;
   }
 
   draw() {
@@ -84,5 +87,13 @@ function updateCanvas() {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   meadow.draw();
   man.draw();
-  poop.draw();
 }
+
+function fallingPoop() {
+  updateCanvas();
+  poop.draw();
+  poop.y += poop.vy;
+  poop.vy += poop.gravity;
+}
+
+setInterval(fallingPoop, 50)
