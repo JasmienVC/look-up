@@ -80,15 +80,23 @@ document.addEventListener("keydown", e => {
     case 37:
       if(man.x > -125 && gameStatus !== "lost") {
         man.moveLeft();
+        updateCanvas();
       }
       break;
     case 39:
       if(man.x < 1000 && gameStatus !== "lost") {
         man.moveRight();
+        updateCanvas();
       }
       break;
+    case 13:
+      updateCanvas();
+      level = 1;
+      gameStatus = "";
+      poops.forEach(poop => poops.splice(poop));
+      poops.push(new Poop());
+      break;
   }
-  updateCanvas();
 });
 
 function updateCanvas() {
