@@ -55,8 +55,8 @@ class Poop {
     this.x = Math.random() * canvas.width;
     this.y = 0;
     this.vy = 4;
-    this.gravity = Math.random() / 10;
-    this.interval = setInterval(fallingPoop, 100);
+    this.gravity = Math.random() / 2;
+    this.interval = setInterval(fallingPoop, 150);
   }
 
   draw() {
@@ -76,10 +76,14 @@ poops.push(new Poop());
 document.addEventListener("keydown", e => {
   switch (e.keyCode) {
     case 37:
-      man.moveLeft();
+      if(man.x > -125) {
+        man.moveLeft();
+      }
       break;
     case 39:
-      man.moveRight();
+      if(man.x < 1000) {
+        man.moveRight();
+      }
       break;
   }
   updateCanvas();
@@ -108,7 +112,7 @@ function fallingPoop() {
       poop.x = Math.random() * canvas.width;
       poop.y = 0;
       poop.vy = 4;
-      poop.gravity = Math.random() / 10;
+      poop.gravity = Math.random() / 2;
     }
   });
 }
