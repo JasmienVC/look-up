@@ -54,9 +54,9 @@ class Poop {
   constructor() {
     this.x = Math.random() * canvas.width;
     this.y = 0;
-    this.vy = 1;
-    this.gravity = Math.random() / 4;
-    this.interval = setInterval(fallingPoop, 50);
+    this.vy = 4;
+    this.gravity = Math.random() / 10;
+    this.interval = setInterval(fallingPoop, 100);
   }
 
   draw() {
@@ -71,10 +71,7 @@ class Poop {
 const meadow = new Meadow();
 const man = new Man();
 const poops = [];
-
-for (let i = 0; i < 3; i++) {
-  poops.push(new Poop());
-}
+poops.push(new Poop());
 
 document.addEventListener("keydown", e => {
   switch (e.keyCode) {
@@ -92,6 +89,7 @@ function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   meadow.draw();
   man.draw();
+  printLevel();
   checkGameOver();
 }
 
@@ -109,8 +107,8 @@ function fallingPoop() {
     if (poop.y > canvas.height) {
       poop.x = Math.random() * canvas.width;
       poop.y = 0;
-      poop.vy = 1;
-      poop.gravity = Math.random() / 4;
+      poop.vy = 4;
+      poop.gravity = Math.random() / 10;
     }
   });
 }
@@ -129,3 +127,19 @@ function checkGameOver() {
     }
   });
 }
+
+let level = 1
+
+function levelUp() {
+  level += 1;
+  poops.push(new Poop());
+  updateCanvas();
+}
+
+function printLevel() {
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+  ctx.fillText(`Level ${level}`, 50, 50);
+}
+
+setInterval(levelUp, 10000)
