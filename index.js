@@ -27,6 +27,8 @@ class Man {
   constructor() {
     this.x = 0;
     this.y = 500;
+    this.level = setInterval(levelUp, 10000)
+
 
     const img = new Image();
     img.src = "./images/man.svg";
@@ -76,12 +78,12 @@ poops.push(new Poop());
 document.addEventListener("keydown", e => {
   switch (e.keyCode) {
     case 37:
-      if(man.x > -125) {
+      if(man.x > -125 && gameStatus !== "lost") {
         man.moveLeft();
       }
       break;
     case 39:
-      if(man.x < 1000) {
+      if(man.x < 1000 && gameStatus !== "lost") {
         man.moveRight();
       }
       break;
@@ -117,16 +119,21 @@ function fallingPoop() {
   });
 }
 
+let gameStatus = ""
+
 function checkGameOver() {
   const gameOver = new Image();
   gameOver.src = "./images/gameover.jpg";
 
   poops.some(function (poop) {
     if (poop.y >= man.y && poop.x + 15 >= man.x + 145 && man.x + 255 >= poop.x - 15) {
+      gameStatus = "lost"
       gameOver.addEventListener("load", () => {
         poops.forEach(poop => clearInterval(poop.interval));
         clearCanvas();
         ctx.drawImage(gameOver, 0, 0, canvas.width, canvas.height);
+        clearInterval(clearInterval(man.level));
+        printPlayAgain();
       })
     }
   });
@@ -146,4 +153,11 @@ function printLevel() {
   ctx.fillText(`Level ${level}`, 50, 50);
 }
 
-setInterval(levelUp, 10000)
+function printPlayAgain() {
+  ctx.fillStyle = "white";
+  ctx.font = "30px Arial";
+  ctx.fillText(`Level ${level}`, 50, 50);
+  ctx.font = "60px Arial";
+  ctx.textAlign = "center"
+  ctx.fillText("Press enter to play again", canvas.width / 2, 700);
+}
