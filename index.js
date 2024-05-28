@@ -5,9 +5,6 @@ const ctx = canvas.getContext("2d");
 
 class Meadow {
   constructor() {
-    this.x = 0;
-    this.y = 0
-
     const img = new Image();
     img.src = "./images/meadow.jpg";
 
@@ -19,14 +16,14 @@ class Meadow {
   }
 
   draw() {
-    ctx.drawImage(this.img, this.x, this.y, window.innerWidth, window.innerHeight);
+    ctx.drawImage(this.img, 0, 0, window.innerWidth, window.innerHeight);
   }
 }
 
 class Man {
   constructor() {
     this.x = 0;
-    this.y = 500;
+    this.y = canvas.height - 300;
     this.level = setInterval(levelUp, 10000)
 
 
@@ -84,7 +81,7 @@ document.addEventListener("keydown", e => {
       }
       break;
     case 39:
-      if(man.x < 1000 && gameStatus !== "lost") {
+      if(man.x < canvas.width - 300 && gameStatus !== "lost") {
         man.moveRight();
         updateCanvas();
       }
@@ -94,6 +91,7 @@ document.addEventListener("keydown", e => {
       gameStatus = "";
       poops.forEach(poop => poops.splice(poop));
       poops.push(new Poop());
+      man.level = setInterval(levelUp, 10000)
       updateCanvas();
       break;
   }
@@ -158,14 +156,16 @@ function levelUp() {
 function printLevel() {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
-  ctx.fillText(`Level ${level}`, 50, 50);
+  ctx.textAlign = "center";
+  ctx.fillText(`Level ${level}`, 75, 50);
 }
 
 function printPlayAgain() {
   ctx.fillStyle = "white";
   ctx.font = "30px Arial";
-  ctx.fillText(`Level ${level}`, 50, 50);
+  ctx.textAlign = "center";
+  ctx.fillText(`Level ${level}`, 75, 50);
   ctx.font = "60px Arial";
   ctx.textAlign = "center"
-  ctx.fillText("Press enter to play again", canvas.width / 2, 700);
+  ctx.fillText("Press enter to play again", canvas.width / 2, canvas.height - 100);
 }
