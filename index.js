@@ -26,7 +26,6 @@ class Man {
     this.y = canvas.height - 300;
     this.level = setInterval(levelUp, 10000)
 
-
     const img = new Image();
     img.src = "./images/man.svg";
 
@@ -56,14 +55,15 @@ class Poop {
     this.vy = 4;
     this.gravity = Math.random() / 2;
     this.interval = setInterval(fallingPoop, 150);
+    const img = new Image();
+    img.src = "./images/poop.png";
+    img.addEventListener("load", () => {
+      this.img = img;
+    });
   }
 
   draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, 15, 0, Math.PI * 2);
-    ctx.fillStyle = "#622711";
-    ctx.fill();
-    ctx.closePath();
+    ctx.drawImage(this.img, this.x, this.y, 50, 50);
   }
 }
 
