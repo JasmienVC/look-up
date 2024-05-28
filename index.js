@@ -90,11 +90,11 @@ document.addEventListener("keydown", e => {
       }
       break;
     case 13:
-      updateCanvas();
       level = 1;
       gameStatus = "";
       poops.forEach(poop => poops.splice(poop));
       poops.push(new Poop());
+      updateCanvas();
       break;
   }
 });
