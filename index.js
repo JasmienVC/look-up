@@ -2,13 +2,27 @@ const game = {
   canvas: document.getElementById("canvas"),
   status: "",
   level: 1,
+  poops: [],
   setup: function () {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
     this.ctx = this.canvas.getContext("2d");
+    this.meadow = new Meadow();
+    this.man = new Man();
+  },
+  start: function () {
+    this.setup();
+    this.poops.push(new Poop());
   },
   clear: function () {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  },
+  update: function () {
+    this.clear();
+    this.meadow.draw();
+    this.man.draw();
+    this.printLevel();
+    checkGameOver();
   },
   printLevel: function () {
     this.ctx.fillStyle = "black";
@@ -26,7 +40,7 @@ const game = {
     this.ctx.fillText(
       "Press enter to play again", this.canvas.width / 2, this.canvas.height - 100
     );
-  }
+  },
 }
 
 class Meadow {
@@ -37,7 +51,7 @@ class Meadow {
     img.addEventListener("load", () => {
       this.img = img;
       this.draw();
-      updateCanvas();
+      game.update();
     });
   }
 
@@ -58,7 +72,7 @@ class Man {
     img.addEventListener("load", () => {
       this.img = img;
       this.draw();
-      updateCanvas();
+      game.update();
     });
   }
 
@@ -93,48 +107,36 @@ class Poop {
   }
 }
 
-game.setup();
-const meadow = new Meadow();
-const man = new Man();
-const poops = [];
-poops.push(new Poop());
+game.start();
 
 document.addEventListener("keydown", e => {
   switch (e.keyCode) {
     case 37:
-      if(man.x > -125 && game.status !== "lost") {
-        man.moveLeft();
-        updateCanvas();
+      if(game.man.x > -125 && game.status !== "lost") {
+        game.man.moveLeft();
+        game.update();
       }
       break;
     case 39:
-      if(man.x < game.canvas.width - 300 && game.status !== "lost") {
-        man.moveRight();
-        updateCanvas();
+      if(game.man.x < game.canvas.width - 300 && game.status !== "lost") {
+        game.man.moveRight();
+        game.update();
       }
       break;
     case 13:
       game.level = 1;
       game.status = "";
-      poops.forEach(poop => poops.splice(poop));
-      poops.push(new Poop());
-      man.level = setInterval(levelUp, 10000)
-      updateCanvas();
+      game.poops.forEach(poop => game.poops.splice(poop));
+      game.poops.push(new Poop());
+      game.man.level = setInterval(levelUp, 10000)
+      game.update();
       break;
   }
 });
 
-function updateCanvas() {
-  game.clear();
-  meadow.draw();
-  man.draw();
-  game.printLevel();
-  checkGameOver();
-}
-
 function fallingPoop() {
-  updateCanvas();
-  poops.forEach(function(poop) {
+  game.update();
+  game.poops.forEach(function(poop) {
     poop.draw();
     poop.y += poop.vy;
     poop.vy += poop.gravity;
@@ -152,14 +154,14 @@ function checkGameOver() {
   const gameOver = new Image();
   gameOver.src = "./images/gameover.jpg";
 
-  poops.some(function (poop) {
-    if (poop.y >= man.y && poop.x + 15 >= man.x + 145 && man.x + 255 >= poop.x - 15) {
+  game.poops.some(function (poop) {
+    if (poop.y >= game.man.y && poop.x + 15 >= game.man.x + 145 && game.man.x + 255 >= poop.x - 15) {
       game.status = "lost"
       gameOver.addEventListener("load", () => {
-        poops.forEach(poop => clearInterval(poop.interval));
+        game.poops.forEach(poop => clearInterval(poop.interval));
         game.clear();
         game.ctx.drawImage(gameOver, 0, 0, game.canvas.width, game.canvas.height);
-        clearInterval(clearInterval(man.level));
+        clearInterval(clearInterval(game.man.level));
         game.printPlayAgain();
       })
     }
@@ -168,6 +170,6 @@ function checkGameOver() {
 
 function levelUp() {
   game.level += 1;
-  poops.push(new Poop());
-  updateCanvas();
+  game.poops.push(new Poop());
+  game.update();
 }
